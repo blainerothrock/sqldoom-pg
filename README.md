@@ -159,6 +159,10 @@ uv run postgres/olap.py bench --runs 10 --jit off --workers 4 --only Q1
 
 `runtime-select.sql` and `runtime-updates.sql` contain queries that can be ran while playing the game (`uv run sqldoom/doom_client.py`). 
 
+## Connecting to the database
+
+[DBeaver](https://dbeaver.io) can be used to connect to each database instance. Use a PostgreSQL connection for both PostgreSQL and CedarDB connections. CedarDB is mostly compatable with PostgreSQL (but not enough for pgAdmin as far as I understand).
+
 
 ## AI Disclosure
 Claude Opus 5.5 was used to write the code used in this repository. This includes the translation of the schema to PostgreSQL, formulating the comparision examples, generation of HTML reports, and assistance in streamlining project setup in Docker. This README.md was written by a human (@blainerothrock).
