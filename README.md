@@ -13,7 +13,7 @@ This has been tested on macOS (M2 Pro with 16GB unified memory), using [colima](
 This repository links sqldoom as a submobule and does not alter the origional code. 
 ```bash
 git clone git@github.com:blainerothrock/sqldoom-pg.git
-git submodule init --update --recursive
+git submodule update --init --recursive
 ```
 
 ### 2. Install and sync Python environment (using [UV](https://docs.astral.sh/uv/getting-started/installation/))
@@ -27,7 +27,7 @@ uv sync
 cp .env-template .env
 ```
 
-Populate password (`Sqldoom-Local-2026!`, for example) and update environment as needed. Note update password in `CEDAR_PASSWORD`, `DB_DSN`, `CPG_DSN`, and `CPG_PASSWORD`. Feel free to use a different one for each database (but not needed for local development).
+Populate password (`Sqldoom-Local-2026!`, for example) and update environment as needed. Note update password in `CEDAR_PASSWORD`, `DB_DSN`, `PG_DSN`, and `PG_PASSWORD`. Feel free to use a different one for each database (but not needed for local development).
 
 load the variables:
 ```bash
@@ -92,7 +92,15 @@ The following are some tests comparing SQLDOOM's renderer query (`sqldoom/sql/re
 * `postgres/port_renderer.py` contains slight modification to the renderering script from CedarDB for compatability.
 * We only use vanilla PostgreSQL (no extensions).
 
-#### Single Frame
+### Render Single Frame
+Outputs a single frame from either PG or CedarDB based on the current DB state. Examples:
+```bash
+uv run postgres/render_one.py --engine cedar --ascii
+uv run postgres/render_one.py --engine pg --png pg.png
+uv run postgres/render_one.py --engine pg --sql render-frame.sql
+```
+
+#### Single Frame Comparision
 Runs a single frame from the current CedarDB database state (runs pg clone before rendering), and measures the time. 
 ```bash
 uv run postgres/bench_frame.py --runs 10 --jit off
@@ -144,7 +152,7 @@ There are 5 test queries in `postgres/olap/queries.sql`, each testing a differen
 Run with the following to test a individual query:
 
 ```bash
-postgres/olap.py bench --runs 10 --jit off --workers 4 --only Q1
+uv run postgres/olap.py bench --runs 10 --jit off --workers 4 --only Q1
 ```
 
 ## Runtime Queries
