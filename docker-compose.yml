@@ -1,0 +1,53 @@
+services:
+  cedar:
+    image: cedardb/cedardb:latest
+    container_name: sqldoom-db
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${CEDAR_PORT:-5432}:5432"
+    environment:
+      CEDAR_USER: "${CEDAR_USER:-postgres}"
+      CEDAR_DB: "${CEDAR_DB:-postgres}"
+      CEDAR_PASSWORD: "${CEDAR_PASSWORD:-Sqldoom-Local-2026!}"
+
+      MEMORYSIZE: "${CEDAR_MEMORY_SIZE:-8G}"
+      PARALLEL: "${CEDAR_PARALLEL:-8}"
+
+      # ---- Enterprise Key (required for multiplayer) ----
+      # LICENSE_KEY: "${CEDAR_LICENSE_KEY:-}"
+
+    volumes:
+      - ./db:/var/lib/cedardb/data
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/127.0.0.1/5432'"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+
+  postgres:
+    image: postgres:18
+    container_name: sqldoom-pg
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${PG_PORT:-5433}:5432"
+    environment:
+      POSTGRES_USER: "${PG_USER:-postgres}"
+      POSTGRES_DB: "${PG_DB:-postgres}"
+      POSTGRES_PASSWORD: "${PG_PASSWORD:-Sqldoom-Local-2026!}"
+    # larger shm for shared memory (64MB default in Docker)
+    shm_size: 1g
+    command: ["postgres", "-c", "shared_buffers=${PG_SHARED_BUFFERS:-1GB}"]
+    volumes:
+      - ./postgres/pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PG_USER:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }

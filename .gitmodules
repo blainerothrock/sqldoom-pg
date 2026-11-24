@@ -1,0 +1,3 @@
+[submodule "sqldoom"]
+	path = sqldoom
+	url = git@github.com:cedardb/sqldoom.git

@@ -1,0 +1,23 @@
+.env
+
+# Python
+__pycache__/
+venv/
+
+# The IWADs: doomu.wad is the retail Ultimate Doom and must never be
+# published; doom1.wad is the freely redistributable shareware release.
+*.wad
+
+# A running local demo's state
+db/
+db.old/
+logs/
+local_demo/
+env
+
+# Local PostgreSQL for the comparison demos (docker compose up -d postgres)
+postgres/pgdata/
+postgres/renderer_pg.sql
+postgres/frames/
+postgres/flythrough/
+postgres/plans/
